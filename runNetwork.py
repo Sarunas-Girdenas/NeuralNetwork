@@ -25,10 +25,15 @@ from NeuralNetwork_2_Layers import NeuralNetwork_2_Layers
 
 Network_2 = NeuralNetwork_2_Layers()
 
+Network_2.doBoldDriver = True
+
+Network_2.initializeBoldDriver(1,0.3,0.03,10e-3)
+Network_2.initializeBoldDriver(2,0.4,0.04,10e-3)
+
 Network_2.initializeWeights_Layer1(3,4)
 Network_2.initializeWeights_Layer2(4)
 
-storeErrorsFinal, storeErrors_1 = Network_2.updateWeights(X,y,10000,1e-2,1)
+storeErrorsFinal, storeErrors_1 = Network_2.updateWeights(X,y,10000,1e-9,0.05,0.01)
 
 import matplotlib.pyplot as plt
 plt.plot(storeErrorsFinal)
@@ -40,6 +45,6 @@ plt.show()
 
 ######## THINGS TO DO:
 
-# 1. Implement bold driver algo
-# 2. Do that other thing that improves performance
+# 1. Implement bold driver algo - DONE!
+# 2. Do minibatch
 # 3. Implement ROC curve
