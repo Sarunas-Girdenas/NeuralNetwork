@@ -33,7 +33,7 @@ Network_2.initializeBoldDriver(2,0.4,0.04,10e-3)
 Network_2.initializeWeights_Layer1(3,4)
 Network_2.initializeWeights_Layer2(4)
 
-storeErrorsFinal, storeErrors_1 = Network_2.updateWeights(X,y,10000,1e-9,0.05,0.01)
+storeErrorsFinal, storeErrors_1 = Network_2.updateWeights(X,y,10000,1e-9,0.05,0.01,1,False)
 
 import matplotlib.pyplot as plt
 plt.plot(storeErrorsFinal)
@@ -42,9 +42,13 @@ plt.show()
 plt.plot(storeErrors_1)
 plt.show()
 
+# compute predictions
+
+Network_2.computePredictionNN(X[0,:])
+
 
 ######## THINGS TO DO:
 
 # 1. Implement bold driver algo - DONE!
-# 2. Do minibatch
+# 2. Do minibatch				- DONE!
 # 3. Implement ROC curve

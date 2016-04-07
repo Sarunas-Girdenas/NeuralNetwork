@@ -129,16 +129,25 @@ class NeuralNetwork_2_Layers(object):
 		return learningRate
 
 
-	def updateWeights(self,inputSet,inputLabels,maxIter,tolerance,learningRate_1,learningRate_2):
+	def updateWeights(self,inputSet,inputLabels,maxIter,tolerance,learningRate_1,learningRate_2,batch,miniBatch):
 		'''
 		Purpose: do update using full batch gradient descent
-		Input:   inputSet     - numpy matrix of inputs
-			     inputLabels  - numpy array of labels
-			     maxIter      - number of maximum iterations
-			     tolerance    - tolerance of error
-			     learningRate - learning Rate for gradient descent
+		Input:   inputSet       - numpy matrix of inputs
+			     inputLabels    - numpy array of labels
+			     maxIter        - number of maximum iterations
+			     tolerance      - tolerance of error
+			     learningRate_1 - learning Rate for gradient descent, layer 1
+			     learningRate_2 - learning Rate for gradient descent, layer 2
+			     miniBatch      - True/False -> do miniBatch GD
+			     batch 			- size of the mini batch
 		Output:  storeErrors  - errors from predictions
 		'''
+
+		if type(batch) != int:
+			raise Exception('Batch Size must be Integer!')
+
+		if batch > len(inputSet):
+			raise Exception('Batch cannot be Longer than Input Data!')
 
 		from numpy import dot
 
@@ -151,14 +160,21 @@ class NeuralNetwork_2_Layers(object):
 		errors       = 1
 		l1_errorInit = 1 # initial errors for the first layer
 
+		if miniBatch:
+			from numpy.random import choice
+			batchIndex  = choice(len(inputSet),batch,replace=False)
+			inputSet    = inputSet[batchIndex]
+			inputLabels = inputLabels[batchIndex]
+
+		# zero layer 
+		l0 = inputSet
 
 		while abs(errors) > abs(tolerance):
 
 			noIter += 1
 
 			# forward propagation through layers 0, 1 and 2
-
-			l0 = inputSet
+			
 			l1 = NeuralNetwork_2_Layers.sigmoidActivation( dot(l0,self.weights_1) )
 			l2 = NeuralNetwork_2_Layers.sigmoidActivation( dot(l1,self.weights_2) ) # input for second layer is output from the first
 
@@ -196,4 +212,19 @@ class NeuralNetwork_2_Layers(object):
 
 		return storeErrorsFinal, storeErrors_1
 
+	def computePredictionNN(self,inputData):
+		'''
+		Purpose: compute prediction based on the training
+		Input:   inputData      - numpy array where columns are features and rows are observations
+		Output:	 predictionsOut - numpy array of predictions, the same length as inputData
+		'''
+		
+		from numpy import dot
 
+		l0 = inputData
+		l1 = NeuralNetwork_2_Layers.sigmoidActivation( dot(l0,self.weights_1) )
+		l2 = NeuralNetwork_2_Layers.sigmoidActivation( dot(l1,self.weights_2) )
+
+		predictionsOut = l2
+
+		return predictionsOut
